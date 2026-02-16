@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: live-commerce-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: CORS_ORIGINS
+        sync: false
+
+  - type: static
+    name: live-commerce-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_SOCKET_URL
+        sync: false
+      - key: VITE_ICE_STUN_URLS
+        sync: false
+      - key: VITE_ICE_TURN_URLS
+        sync: false
+      - key: VITE_ICE_TURN_USERNAME
+        sync: false
+      - key: VITE_ICE_TURN_CREDENTIAL
+        sync: false
+      - key: VITE_ICE_TRANSPORT_POLICY
+        sync: false

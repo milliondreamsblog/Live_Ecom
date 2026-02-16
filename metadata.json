@@ -1,0 +1,8 @@
+{
+  "name": "Live Commerce MVP",
+  "description": "A minimal live commerce platform MVP featuring stream browsing, hosting, and watching interfaces. Built with React, TypeScript, and Tailwind CSS.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
