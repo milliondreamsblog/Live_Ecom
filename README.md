@@ -1,94 +1,130 @@
 # Live Commerce MVP
 
-Minimal live-commerce app with:
-- React + Vite frontend
-- Express + Socket.IO backend
-- WebRTC signaling through Socket.IO
+This is a simple live-commerce demo where:
+- A host starts a live stream
+- Viewers join, react, chat, and vote in polls
+- Coupons can be pushed live during the stream
 
-## Local Setup
+Built with:
+- Frontend: React + Vite + Socket.IO client + WebRTC
+- Backend: Express + Socket.IO
 
-### Frontend
-1. Install dependencies:
-   `npm install`
-2. Run dev server:
-   `npm run dev`
-3. App runs on:
-   `http://localhost:3000`
+## Live Deployment
 
-### Backend
-1. Install dependencies:
-   `cd backend && npm install`
-2. Run backend:
-   `npm start`
-3. API/socket server runs on:
-   `http://localhost:4000`
+- Frontend: `https://live-commerce-frontend.onrender.com`
+- Backend: `https://live-commerce-backend.onrender.com`
+- Host page: `https://live-commerce-frontend.onrender.com/#/host`
+- Viewer page: `https://live-commerce-frontend.onrender.com/#/watch/1`
+- Backend health check: `https://live-commerce-backend.onrender.com/health`
+
+## Project Structure
+
+- `backend/` -> Node/Express + Socket.IO signaling server
+- `pages/Host.tsx` -> Host stream screen
+- `pages/Watch.tsx` -> Viewer stream screen
+- `services/rtcConfig.ts` -> ICE/STUN/TURN config from env vars
+- `render.yaml` -> Render Blueprint config
+
+## Run Locally (2 terminals)
+
+Prerequisites:
+- Node.js 18+ (Node 20 recommended)
+- npm
+
+1. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Install backend dependencies:
+   ```bash
+   cd backend
+   npm install
+   cd ..
+   ```
+
+3. Start backend (Terminal 1):
+   ```bash
+   cd backend
+   npm start
+   ```
+   Backend runs on `http://localhost:4000`
+
+4. Start frontend (Terminal 2):
+   ```bash
+   npm run dev
+   ```
+   Frontend runs on `http://localhost:3000`
+
+5. Test streaming locally:
+   - Host page: `http://localhost:3000/#/host`
+   - Viewer page: `http://localhost:3000/#/watch/1`
+   - Open host and viewer in different tabs (or one incognito tab), then click `Go Live`.
 
 ## Environment Variables
 
-### Frontend (`Vite`)
+### Frontend vars (`Vite`)
+
+You can set these in Render or in local `.env.local`.
+
 - `VITE_SOCKET_URL`
-  - Example local value: `http://localhost:4000`
-  - Example Render value: `https://your-backend.onrender.com`
+  - Local: `http://localhost:4000`
+  - Render: `https://live-commerce-backend.onrender.com`
+
 - `VITE_ICE_STUN_URLS`
   - Comma-separated STUN URLs
-  - Default fallback is `stun:stun.l.google.com:19302`
-- `VITE_ICE_TURN_URLS` (optional, recommended for production)
+  - Example: `stun:stun.l.google.com:19302`
+
+- `VITE_ICE_TURN_URLS` (optional, recommended in production)
   - Comma-separated TURN URLs
   - Recommended order:
-    `turns:turn.example.com:443?transport=tcp,turn:turn.example.com:3478?transport=udp`
+    `turns:<turn-host>:443?transport=tcp,turn:<turn-host>:3478?transport=udp`
+
 - `VITE_ICE_TURN_USERNAME` (optional)
 - `VITE_ICE_TURN_CREDENTIAL` (optional)
 - `VITE_ICE_TRANSPORT_POLICY` (optional)
-  - `all` (default) or `relay` (forces TURN-only media path)
+  - `all` (default)
+  - `relay` (forces TURN relay only, useful for strict corporate networks)
 
-### Backend
-- `PORT` (optional, Render injects this automatically)
+### Backend vars
+
+- `PORT` (optional, Render sets it automatically)
 - `CORS_ORIGINS`
-  - Comma-separated allowed origins
+  - Comma-separated allowed frontend origins
   - Example:
-    `https://your-frontend.onrender.com,http://localhost:3000`
+    `https://live-commerce-frontend.onrender.com,http://localhost:3000`
 
-## Deploying on Render
+## Deploy on Render (Recommended: Blueprint)
 
-You can deploy with `render.yaml` in this repo (Blueprint) or create services manually.
+This repo already includes `render.yaml`.
 
-### Option A: Blueprint (`render.yaml`)
 1. Push this repo to GitHub.
-2. In Render: New -> Blueprint.
-3. Select repo and apply.
-4. After first deploy:
-   - Open backend service.
-   - Set `CORS_ORIGINS` to your frontend Render URL.
-   - Redeploy backend.
+2. In Render, click `New` -> `Blueprint`.
+3. Select your repo and deploy.
+4. Fill env vars during setup:
+   - Backend `CORS_ORIGINS` -> `https://live-commerce-frontend.onrender.com`
+   - Frontend `VITE_SOCKET_URL` -> `https://live-commerce-backend.onrender.com`
+   - Frontend `VITE_ICE_STUN_URLS` -> `stun:stun.l.google.com:19302`
+   - TURN vars optional (recommended if users are on restricted networks)
+5. After services are created, confirm URLs and redeploy if you changed env vars.
 
-### Option B: Manual services
-1. Create Web Service for backend:
-   - Root Directory: `backend`
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-2. Create Static Site for frontend:
-   - Root Directory: project root
-   - Build Command: `npm install && npm run build`
-   - Publish Directory: `dist`
-   - Env vars:
-     `VITE_SOCKET_URL=https://<backend-service>.onrender.com`
-     `VITE_ICE_STUN_URLS=stun:stun.l.google.com:19302`
-     `VITE_ICE_TURN_URLS=turns:<turn-host>:443?transport=tcp,turn:<turn-host>:3478?transport=udp`
-     `VITE_ICE_TURN_USERNAME=<turn-username>`
-     `VITE_ICE_TURN_CREDENTIAL=<turn-password>`
-3. Set backend env var:
-   - `CORS_ORIGINS=https://<frontend-service>.onrender.com`
+## Verify Deployment
 
-## Testing the Live Stream
+1. Health check backend:
+   - `https://live-commerce-backend.onrender.com/health`
+2. Open host:
+   - `https://live-commerce-frontend.onrender.com/#/host`
+3. Open viewer:
+   - `https://live-commerce-frontend.onrender.com/#/watch/1`
+4. Start stream and verify video appears on viewer side.
 
-1. Open host page:
-   `https://<frontend>.onrender.com/#/host`
-2. Open watch page in another browser/incognito:
-   `https://<frontend>.onrender.com/#/watch/1`
-3. Click `Go Live` on host and confirm video appears on watcher.
+## Common Issues
 
-## Notes
+- No video on viewer:
+  - Check browser camera/mic permissions on host.
+  - Make sure `VITE_SOCKET_URL` points to the correct backend URL.
+  - Add TURN config for strict firewalls/corporate networks.
 
-- ICE servers are now env-driven and shared between host and watcher clients.
-- For strict corporate networks, configure TURN with `turns` over TCP 443 first, then optional UDP fallback.
-- If you need deterministic relay behavior, set `VITE_ICE_TRANSPORT_POLICY=relay`.
+- Socket connects locally but not on Render:
+  - Check backend `CORS_ORIGINS` exactly matches frontend URL.
+  - Redeploy backend after updating env vars.

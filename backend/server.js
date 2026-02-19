@@ -1,10 +1,26 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const { Stream, Coupon, Poll } = require('./models');
+const store = require('./store/sessionStore');
+
+const streamHandler = require('./handlers/stream');
+const signalingHandler = require('./handlers/signaling');
+const chatHandler = require('./handlers/chat');
+const commerceHandler = require('./handlers/commerce');
+const pollsHandler = require('./handlers/polls');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('MONGODB_URI environment variable is required');
+  process.exit(1);
+}
 
 const origins = (process.env.CORS_ORIGINS || '')
   .split(',')
@@ -20,6 +36,44 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() });
 });
 
+const formatStream = (s) => {
+  const rawCount = store.getViewerCount(s._id);
+  const viewers = Math.max(0, rawCount - 1);
+  return {
+    id: s._id,
+    title: s.title,
+    hostName: s.hostName,
+    category: s.category,
+    isLive: s.isLive,
+    thumbnailUrl: s.thumbnailUrl,
+    startedAt: s.startedAt,
+    viewers
+  };
+};
+
+app.get('/api/streams', async (req, res) => {
+  try {
+    const streams = await Stream.find().lean();
+    res.json(streams.map(formatStream));
+  } catch (err) {
+    console.error('Error fetching streams:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/streams/:id', async (req, res) => {
+  try {
+    const s = await Stream.findById(req.params.id).lean();
+    if (!s) {
+      return res.status(404).json({ error: 'Stream not found' });
+    }
+    res.json(formatStream(s));
+  } catch (err) {
+    console.error('Error fetching stream:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -29,144 +83,78 @@ const io = new Server(server, {
   }
 });
 
-const views = {};
-const sockMap = {};
-const casts = {};
-const coupons = {};
-const polls = {};
-
 io.on('connection', (sock) => {
   console.log('User connected:', sock.id);
 
-  sock.on('join-room', (rid) => {
-    sock.join(rid);
-    sockMap[sock.id] = rid;
+  const stream = streamHandler(io, sock, store);
+  const signaling = signalingHandler(io, sock, store);
+  const chat = chatHandler(io, sock, store);
+  const commerce = commerceHandler(io, sock, store);
+  const polls = pollsHandler(io, sock, store);
 
-    if (!views[rid]) {
-      views[rid] = 0;
-    }
-    views[rid] += 1;
+  sock.on('join-room', stream.joinRoom);
+  sock.on('start-stream', stream.startStream);
+  sock.on('end-stream', stream.endStream);
+  sock.on('broadcaster', stream.claimBroadcaster);
 
-    io.to(rid).emit('viewer-count', views[rid]);
+  sock.on('watcher', signaling.handleWatcher);
+  sock.on('offer', signaling.handleOffer);
+  sock.on('answer', signaling.handleAnswer);
+  sock.on('candidate', signaling.handleCandidate);
 
-    const c = coupons[rid];
-    if (c && c.expiresAt > Date.now()) {
-      sock.emit('current-coupon', c);
-    }
+  sock.on('send-message', chat.sendMessage);
+  sock.on('send-reaction', chat.sendReaction);
 
-    const p = polls[rid];
-    if (p && p.isActive) {
-      sock.emit('current-poll', p);
-    }
-  });
+  sock.on('send-coupon', commerce.sendCoupon);
 
-  sock.on('start-stream', (d) => {
-    io.emit('stream-started', d);
-  });
+  sock.on('create-poll', polls.createPoll);
+  sock.on('vote-poll', polls.votePoll);
+  sock.on('end-poll', polls.endPoll);
 
-  sock.on('broadcaster', (rid) => {
-    casts[rid] = sock.id;
-    sock.broadcast.to(rid).emit('broadcaster');
-  });
+  sock.on('disconnect', async () => {
+    try {
+      const rid = store.getRoomId(sock.id);
 
-  sock.on('watcher', (rid) => {
-    const castId = casts[rid];
-    if (castId) {
-      io.to(castId).emit('watcher', sock.id);
-    }
-  });
-
-  sock.on('offer', (id, msg) => {
-    io.to(id).emit('offer', sock.id, msg);
-  });
-
-  sock.on('answer', (id, msg) => {
-    io.to(id).emit('answer', sock.id, msg);
-  });
-
-  sock.on('candidate', (id, msg) => {
-    io.to(id).emit('candidate', sock.id, msg);
-  });
-
-  sock.on('send-reaction', (d) => {
-    io.to(d.roomId).emit('receive-reaction', d.type);
-  });
-
-  sock.on('send-coupon', ({ roomId, code, duration }) => {
-    const exp = Date.now() + duration * 1000;
-    const c = { code, expiresAt: exp };
-    coupons[roomId] = c;
-
-    io.to(roomId).emit('new-coupon', c);
-
-    setTimeout(() => {
-      if (coupons[roomId] && coupons[roomId].expiresAt === exp) {
-        delete coupons[roomId];
+      if (store.isBroadcaster(rid, sock.id)) {
+        store.removeBroadcaster(rid);
+        await Stream.deleteOne({ _id: rid });
+        io.to(rid).emit('stream-ended', { roomId: rid });
       }
-    }, duration * 1000);
-  });
 
-  sock.on('create-poll', ({ roomId, question, options }) => {
-    polls[roomId] = {
-      question,
-      options: options.map((t) => ({ text: t, votes: 0 })),
-      isActive: true
-    };
-    io.to(roomId).emit('new-poll', polls[roomId]);
-  });
+      if (rid) {
+        store.leaveRoom(sock.id);
+        const views = Math.max(0, store.getViewerCount(rid) - 1);
 
-  sock.on('vote-poll', ({ roomId, optionIndex }) => {
-    const p = polls[roomId];
-    if (p && p.isActive && p.options[optionIndex]) {
-      p.options[optionIndex].votes += 1;
-      io.to(roomId).emit('update-poll-results', p);
-    }
-  });
+        io.to(rid).emit('viewer-count', views);
 
-  sock.on('end-poll', ({ roomId }) => {
-    if (polls[roomId]) {
-      polls[roomId].isActive = false;
-      io.to(roomId).emit('poll-ended');
-      delete polls[roomId];
-    }
-  });
-
-  sock.on('send-message', (d) => {
-    const m = {
-      id: Date.now().toString(),
-      username: d.username,
-      message: d.message,
-      timestamp: Date.now()
-    };
-
-    io.to(d.roomId).emit('receive-message', m);
-  });
-
-  sock.on('disconnect', () => {
-    const rid = sockMap[sock.id];
-
-    if (rid && casts[rid] === sock.id) {
-      delete casts[rid];
-    }
-
-    if (!rid) {
-      return;
-    }
-
-    if (views[rid] > 0) {
-      views[rid] -= 1;
-    }
-    io.to(rid).emit('viewer-count', views[rid] || 0);
-
-    delete sockMap[sock.id];
-
-    const castId = casts[rid];
-    if (castId) {
-      io.to(castId).emit('disconnectPeer', sock.id);
+        const castId = store.getBroadcaster(rid);
+        if (castId) {
+          io.to(castId).emit('disconnectPeer', sock.id);
+        }
+      }
+    } catch (err) {
+      console.error('Error in disconnect:', err);
     }
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function start() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log('Connected to MongoDB');
+
+    await Stream.deleteMany({});
+    await Coupon.deleteMany({});
+    await Poll.deleteMany({});
+    console.log('Cleaned up stale data');
+
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+}
+
+start();

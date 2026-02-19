@@ -1,6 +1,6 @@
 {
   "name": "Live Commerce MVP",
-  "description": "A minimal live commerce platform MVP featuring stream browsing, hosting, and watching interfaces. Built with React, TypeScript, and Tailwind CSS.",
+  "description": "India's first live commerce platform",
   "requestFramePermissions": [
     "camera",
     "microphone"
