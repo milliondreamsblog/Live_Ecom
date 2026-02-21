@@ -1,13 +1,14 @@
 import React from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Zap } from 'lucide-react';
 import { Product } from '../types';
 import { useC } from '../contexts/CartContext';
 
 interface ProductCardProps {
     product: Product;
+    onFeature?: (product: Product) => void; // host-only: feature on screen
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onFeature }) => {
     const { add } = useC();
 
     return (
@@ -17,17 +18,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
             <div className="flex-grow flex flex-col justify-between">
                 <div>
-                    <h3 className="font-bold text-gray-900 text-sm leading-tight mb-1">{product.name}</h3>
+                    <h3 className="font-bold text-gray-900 text-sm leading-tight mb-0.5">{product.name}</h3>
+                    {product.category && (
+                        <p className="text-gray-400 text-xs mb-0.5">{product.category}</p>
+                    )}
                     <p className="text-gray-500 text-xs">In Stock</p>
                 </div>
-                <div className="flex items-center justify-between mt-2">
-                    <span className="font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                    <button
-                        onClick={() => add(product)}
-                        className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
-                    >
-                        <Plus size={16} />
-                    </button>
+                <div className="flex items-center justify-between mt-2 gap-1">
+                    <span className="font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
+                    <div className="flex gap-1">
+                        {onFeature && (
+                            <button
+                                onClick={() => onFeature(product)}
+                                title="Feature on screen"
+                                className="p-2 bg-orange-100 text-orange-600 rounded-lg hover:bg-orange-200 transition-colors"
+                            >
+                                <Zap size={14} />
+                            </button>
+                        )}
+                        <button
+                            onClick={() => add(product)}
+                            className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
+                        >
+                            <Plus size={16} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

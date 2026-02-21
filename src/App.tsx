@@ -6,6 +6,7 @@ import { Host } from './pages/Host';
 import { Watch } from './pages/Watch';
 import { CProv } from './contexts/CartContext';
 import { SocketProvider } from './contexts/SocketContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 const Lout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const loc = useLocation();
@@ -21,18 +22,20 @@ const Lout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export default function App() {
     return (
-        <SocketProvider>
-            <CProv>
-                <HashRouter>
-                    <Lout>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/host" element={<Host />} />
-                            <Route path="/watch/:id" element={<Watch />} />
-                        </Routes>
-                    </Lout>
-                </HashRouter>
-            </CProv>
-        </SocketProvider>
+        <AuthProvider>
+            <SocketProvider>
+                <CProv>
+                    <HashRouter>
+                        <Lout>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/host" element={<Host />} />
+                                <Route path="/watch/:id" element={<Watch />} />
+                            </Routes>
+                        </Lout>
+                    </HashRouter>
+                </CProv>
+            </SocketProvider>
+        </AuthProvider>
     );
 }

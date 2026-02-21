@@ -106,6 +106,8 @@ io.on('connection', (sock) => {
   sock.on('send-reaction', chat.sendReaction);
 
   sock.on('send-coupon', commerce.sendCoupon);
+  sock.on('feature-product', commerce.featureProduct);
+  sock.on('product-purchased', commerce.productPurchased);
 
   sock.on('create-poll', polls.createPoll);
   sock.on('vote-poll', polls.votePoll);

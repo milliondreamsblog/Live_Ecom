@@ -25,12 +25,24 @@ export const useChat = (roomId: string) => {
             }, 2000);
         };
 
+        const handlePurchase = (d: any) => {
+            setMessages(prev => [...prev, {
+                id: 'buy-' + Date.now(),
+                username: '🛒',
+                message: `${d.username} just bought ${d.product.name}! 🎉`,
+                timestamp: Date.now(),
+                type: 'purchase' as const,
+            }]);
+        };
+
         socket.on('receive-message', handleMessage);
         socket.on('receive-reaction', handleReaction);
+        socket.on('product-purchased', handlePurchase);
 
         return () => {
             socket.off('receive-message', handleMessage);
             socket.off('receive-reaction', handleReaction);
+            socket.off('product-purchased', handlePurchase);
         };
     }, [socket, roomId]);
 

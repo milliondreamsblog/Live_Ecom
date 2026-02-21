@@ -35,7 +35,43 @@ module.exports = (io, socket, store) => {
         }
     };
 
+    const featureProduct = ({ roomId, product }) => {
+        try {
+            if (!checkBroadcaster(socket, roomId)) return;
+            if (!product || !product.id) return;
+            const safe = {
+                id: Number(product.id),
+                name: sanitize(String(product.name || ''), MAX_LEN.message),
+                price: Number(product.price) || 0,
+                image: String(product.image || '').slice(0, 500),
+                category: sanitize(String(product.category || ''), 50),
+            };
+
+            io.to(roomId).emit('featured-product', safe);
+        } catch (err) {
+            console.error('featureProduct error', err);
+        }
+    };
+
+    const productPurchased = ({ roomId, username, product }) => {
+        try {
+            if (!roomId || !product?.id) return;
+            io.to(roomId).emit('product-purchased', {
+                username: sanitize(String(username || 'Someone'), MAX_LEN.message),
+                product: {
+                    id: Number(product.id),
+                    name: sanitize(String(product.name || ''), MAX_LEN.message),
+                    price: Number(product.price) || 0
+                }
+            });
+        } catch (e) {
+            console.error('purchase relay err', e);
+        }
+    };
+
     return {
-        sendCoupon
+        sendCoupon,
+        featureProduct,
+        productPurchased,
     };
 };

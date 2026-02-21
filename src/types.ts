@@ -3,6 +3,16 @@ export interface Product {
     name: string;
     price: number;
     image: string;
+    category?: string;
+}
+
+export interface User {
+    name: string;
+    role: 'host' | 'viewer';
+}
+
+export interface FeaturedProduct extends Product {
+    featuredAt: number;
 }
 
 export interface CartItem extends Product {
@@ -14,6 +24,7 @@ export interface Msg {
     username: string;
     message: string;
     timestamp: number;
+    type?: 'purchase' | 'chat';
 }
 
 export interface St {
