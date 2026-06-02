@@ -62,7 +62,7 @@ export const useWebRTC = (roomId: string, isHost: boolean) => {
                 socket.off('candidate', handleCandidate);
                 socket.off('disconnectPeer', handleDisconnectPeer);
 
-                Object.values(pcs.current).forEach(p => p.close());
+                Object.values(pcs.current).forEach((p: RTCPeerConnection) => p.close());
                 pcs.current = {};
             };
         } else {
