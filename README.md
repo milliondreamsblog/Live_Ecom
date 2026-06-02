@@ -128,3 +128,15 @@ This repo already includes `render.yaml`.
 - Socket connects locally but not on Render:
   - Check backend `CORS_ORIGINS` exactly matches frontend URL.
   - Redeploy backend after updating env vars.
+
+- Whole app looks dead (no streams, chat, or video, and no errors):
+  - The backend almost certainly isn't reachable. Both servers must be
+    running locally (backend on `:4000`, frontend on `:3000`).
+  - A "Connecting to server…" / "Disconnected — reconnecting…" banner now
+    appears bottom-center whenever the socket isn't connected.
+  - On Render's free tier the backend sleeps after ~15 min idle and takes
+    ~50s to cold-start; the banner clears once it wakes.
+
+- Video never appears across different networks (works on same machine/LAN):
+  - Plain STUN can't traverse most NATs. Configure the `VITE_ICE_TURN_*`
+    vars with a real TURN relay (see Environment Variables above).
