@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
+import { ConnectionStatus } from './components/ConnectionStatus';
 import { Home } from './pages/Home';
 import { Host } from './pages/Host';
 import { Watch } from './pages/Watch';
@@ -33,6 +34,7 @@ export default function App() {
                                 <Route path="/watch/:id" element={<Watch />} />
                             </Routes>
                         </Lout>
+                        <ConnectionStatus />
                     </HashRouter>
                 </CProv>
             </SocketProvider>
