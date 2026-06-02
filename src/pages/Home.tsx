@@ -13,8 +13,8 @@ export const Home: React.FC = () => {
         const fetchStreams = () => {
             fetch(`${SOCKET_URL}/api/streams`)
                 .then((res) => res.json())
-                .then((data) => {
-                    setStreams(data);
+                .then((data: St[]) => {
+                    setStreams(data.filter((s) => s.isLive));
                     setLoading(false);
                 })
                 .catch(() => {
