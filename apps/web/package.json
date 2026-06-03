@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@livedrop/core": "workspace:*",
+    "@livedrop/features": "workspace:*",
+    "@livedrop/realtime": "workspace:*",
     "lucide-react": "^0.564.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
