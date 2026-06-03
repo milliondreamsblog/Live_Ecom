@@ -15,7 +15,13 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+build
+.next
 *.local
+
+# Monorepo / tooling
+.turbo
+.claude
 
 # Editor directories and files
 .vscode/*
