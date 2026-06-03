@@ -46,9 +46,19 @@ const orderSchema = new mongoose.Schema({
   createdAt: { type: Number }
 });
 
+const deliverySchema = new mongoose.Schema({
+  _id: { type: String }, // orderId
+  orderId: { type: String },
+  riderName: { type: String },
+  status: { type: String, default: 'assigned' },
+  etaMinutes: { type: Number, default: 10 },
+  createdAt: { type: Number }
+});
+
 const Stream = mongoose.model('Stream', streamSchema);
 const Coupon = mongoose.model('Coupon', couponSchema);
 const Poll = mongoose.model('Poll', pollSchema);
 const Order = mongoose.model('Order', orderSchema);
+const Delivery = mongoose.model('Delivery', deliverySchema);
 
-module.exports = { Stream, Coupon, Poll, Order };
+module.exports = { Stream, Coupon, Poll, Order, Delivery };
