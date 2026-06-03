@@ -3,7 +3,7 @@ services:
     name: live-commerce-backend
     runtime: node
     plan: free
-    buildCommand: corepack enable && pnpm install --frozen-lockfile
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --filter @livedrop/server...
     startCommand: pnpm --filter @livedrop/server start
     envVars:
       - key: CORS_ORIGINS
@@ -14,7 +14,7 @@ services:
   - type: web
     name: live-commerce-frontend
     runtime: static
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @livedrop/web build
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --filter @livedrop/web... && pnpm --filter @livedrop/web build
     staticPublishPath: apps/web/dist
     envVars:
       - key: VITE_SOCKET_URL
