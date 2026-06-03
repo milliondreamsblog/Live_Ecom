@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git merge *)",
+      "Bash(git push *)",
+      "Bash(npm -v)",
+      "Bash(echo \"npm: $\\(npm -v\\)\")",
+      "Bash(pnpm -v)",
+      "Bash(echo \"pnpm: $\\(pnpm -v 2>/dev/null || echo 'NOT INSTALLED'\\)\")",
+      "Bash(corepack -v)",
+      "Bash(git mv *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(mkdir -p apps/server)",
+      "Bash(ls -A backend)",
+      "Bash(mv backend/.env apps/server/.env)",
+      "Bash(rm -rf backend)"
+    ]
+  }
+}
