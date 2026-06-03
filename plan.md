@@ -370,6 +370,7 @@ Sequenced by dependency, not calendar. Each phase ships something demoable.
 > - ✅ **Phase 0** — Turborepo + pnpm; `apps/web`, `apps/server`; `@livedrop/core` (zod) + `@livedrop/config`. Green build/typecheck, no behaviour change.
 > - ✅ **Phase 1** — `@livedrop/realtime` (typed event contract + `SocketProvider`/`useSocket`); `@livedrop/features` (headless `useChat`/`usePolls`/`useCoupons`); web consumes both via re-exports.
 > - 🔄 **Phase 2 (in progress)** — `@livedrop/ui` design tokens + Tailwind v4 theme (adopted: LIVE badges → `bg-live`); `formatINR` in core (adopted across cards + cart). Next: Next.js re-platform + real auth.
+> - 🔄 **Phase 3 (scaffolded)** — `@livedrop/streaming` (LiveKit `useStream` + token client); server `/api/livekit/token` mint route (501 until `LIVEKIT_*` set); web `STREAMING_BACKEND` flag (defaults `p2p`, non-breaking). All packages marked side-effect-free for tree-shaking. Next: swap Host/Watch onto LiveKit once creds are provisioned + RN client for mobile.
 
 **Phase 0 — Monorepo scaffold (foundation).**
 Turborepo + pnpm; move Vite app → `apps/web`, `backend/` → `apps/server`; extract `packages/core` (zod schemas from [types.ts](src/types.ts)) and `packages/config`. Green build + typecheck. *No behaviour change.*
