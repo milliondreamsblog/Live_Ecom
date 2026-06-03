@@ -1,0 +1,21 @@
+/**
+ * LiveDrop Tailwind v4 theme — additive brand + semantic tokens.
+ * Import after `@import "tailwindcss";`. Mirrors packages/ui/src/tokens.ts.
+ * Generates utilities like bg-brand, text-live, rounded-sheet, etc., without
+ * removing any default Tailwind tokens.
+ */
+@theme {
+  --color-brand: #e1306c;
+  --color-brand-alt: #7c3aed;
+  --color-live: #ef4444;
+  --color-success: #22c55e;
+  --color-warn: #f59e0b;
+  --color-ink: #0a0a0b;
+
+  --radius-chip: 8px;
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+
+  --ease-snappy: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
