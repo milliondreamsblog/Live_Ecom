@@ -35,6 +35,12 @@ importers:
       '@livedrop/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@livedrop/features':
+        specifier: workspace:*
+        version: link:../../packages/features
+      '@livedrop/realtime':
+        specifier: workspace:*
+        version: link:../../packages/realtime
       lucide-react:
         specifier: ^0.564.0
         version: 0.564.0(react@19.2.7)
