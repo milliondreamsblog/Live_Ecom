@@ -58,8 +58,9 @@ Prerequisites:
    ```
    Frontend runs on `http://localhost:3000`
 
-   Useful root scripts: `pnpm build`, `pnpm typecheck` (run across the
-   workspace via Turborepo).
+   Useful root scripts: `pnpm build`, `pnpm typecheck`, `pnpm test` (run
+   across the workspace via Turborepo). CI runs the same on every push/PR
+   (`.github/workflows/ci.yml`).
 
 4. Test streaming locally:
    - Host page: `http://localhost:3000/#/host`
