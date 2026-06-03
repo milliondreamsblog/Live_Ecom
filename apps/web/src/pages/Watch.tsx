@@ -163,7 +163,7 @@ export const Watch: React.FC = () => {
                         </div>
                     </div>
                     <div className="flex items-center gap-2 pointer-events-auto">
-                        <span className="px-2 py-1 bg-red-600 text-white text-xs font-bold rounded animate-pulse">LIVE</span>
+                        <span className="px-2 py-1 bg-live text-white text-xs font-bold rounded animate-pulse">LIVE</span>
                         <span className="px-2 py-1 bg-black/60 text-white text-xs font-bold rounded flex gap-1 items-center"><Users size={12} /> {views}</span>
                         <button onClick={tog} className="px-3 py-1 bg-purple-600 text-white text-xs font-bold rounded flex gap-1 items-center relative hover:bg-purple-700 transition-colors">
                             <ShoppingBag size={14} /> Cart
