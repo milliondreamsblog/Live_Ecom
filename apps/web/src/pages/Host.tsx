@@ -238,7 +238,7 @@ const Host: React.FC = () => {
 
                             {/* Status badge */}
                             <div className="absolute top-4 left-4 flex gap-2 z-30">
-                                <div className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 ${live ? 'bg-red-600 text-white animate-pulse' : 'bg-gray-600 text-gray-300'}`}>
+                                <div className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 ${live ? 'bg-live text-white animate-pulse' : 'bg-gray-600 text-gray-300'}`}>
                                     <div className={`w-2 h-2 rounded-full ${live ? 'bg-white' : 'bg-gray-400'}`}></div>
                                     {live ? 'LIVE' : 'OFFLINE'}
                                 </div>
