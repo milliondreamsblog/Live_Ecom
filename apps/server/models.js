@@ -28,8 +28,27 @@ const pollSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true }
 });
 
+const orderSchema = new mongoose.Schema({
+  _id: { type: String },
+  roomId: { type: String },
+  username: { type: String },
+  items: [{
+    _id: false,
+    productId: { type: Number },
+    name: { type: String },
+    unitPricePaise: { type: Number },
+    quantity: { type: Number }
+  }],
+  amountPaise: { type: Number, required: true },
+  status: { type: String, default: 'pending' },
+  idempotencyKey: { type: String, index: true },
+  razorpayOrderId: { type: String },
+  createdAt: { type: Number }
+});
+
 const Stream = mongoose.model('Stream', streamSchema);
 const Coupon = mongoose.model('Coupon', couponSchema);
 const Poll = mongoose.model('Poll', pollSchema);
+const Order = mongoose.model('Order', orderSchema);
 
-module.exports = { Stream, Coupon, Poll };
+module.exports = { Stream, Coupon, Poll, Order };
