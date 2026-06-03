@@ -3,9 +3,8 @@ services:
     name: live-commerce-backend
     runtime: node
     plan: free
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: corepack enable && pnpm install --frozen-lockfile
+    startCommand: pnpm --filter @livedrop/server start
     envVars:
       - key: CORS_ORIGINS
         sync: false
@@ -15,8 +14,8 @@ services:
   - type: web
     name: live-commerce-frontend
     runtime: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @livedrop/web build
+    staticPublishPath: apps/web/dist
     envVars:
       - key: VITE_SOCKET_URL
         sync: false
