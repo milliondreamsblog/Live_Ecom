@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { canTransition, nextStatuses, CreateOrderInputSchema } from './order';
+import { canTransition, nextStatuses, orderTotalPaise, CreateOrderInputSchema } from './order';
 
 describe('order state machine', () => {
   it('allows valid forward transitions', () => {
@@ -24,6 +24,21 @@ describe('order state machine', () => {
   it('treats delivered and cancelled as terminal', () => {
     expect(nextStatuses('delivered')).toEqual([]);
     expect(nextStatuses('cancelled')).toEqual([]);
+  });
+});
+
+describe('orderTotalPaise', () => {
+  it('sums unit price times quantity', () => {
+    expect(
+      orderTotalPaise([
+        { unitPricePaise: 249900, quantity: 2 },
+        { unitPricePaise: 79900, quantity: 1 },
+      ]),
+    ).toBe(579700);
+  });
+
+  it('is zero for an empty cart', () => {
+    expect(orderTotalPaise([])).toBe(0);
   });
 });
 
