@@ -1,0 +1,8 @@
+{
+  "extends": "@livedrop/config/tsconfig/base.json",
+  "compilerOptions": {
+    "strict": true,
+    "types": []
+  },
+  "include": ["src"]
+}
