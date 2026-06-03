@@ -19,7 +19,7 @@ export const SCard: React.FC<SCProps> = ({ s }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                 <div className="absolute top-3 left-3">
-                    <span className="px-2 py-1 bg-red-600 text-white text-xs font-bold rounded flex items-center gap-1 animate-pulse">
+                    <span className="px-2 py-1 bg-live text-white text-xs font-bold rounded flex items-center gap-1 animate-pulse">
                         LIVE
                     </span>
                 </div>
