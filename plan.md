@@ -366,6 +366,11 @@ A typed `emit`/`on` wrapper makes invalid events a **compile error**, on both si
 
 Sequenced by dependency, not calendar. Each phase ships something demoable.
 
+> **Progress (delivered):**
+> - ✅ **Phase 0** — Turborepo + pnpm; `apps/web`, `apps/server`; `@livedrop/core` (zod) + `@livedrop/config`. Green build/typecheck, no behaviour change.
+> - ✅ **Phase 1** — `@livedrop/realtime` (typed event contract + `SocketProvider`/`useSocket`); `@livedrop/features` (headless `useChat`/`usePolls`/`useCoupons`); web consumes both via re-exports.
+> - 🔄 **Phase 2 (in progress)** — `@livedrop/ui` design tokens + Tailwind v4 theme (adopted: LIVE badges → `bg-live`); `formatINR` in core (adopted across cards + cart). Next: Next.js re-platform + real auth.
+
 **Phase 0 — Monorepo scaffold (foundation).**
 Turborepo + pnpm; move Vite app → `apps/web`, `backend/` → `apps/server`; extract `packages/core` (zod schemas from [types.ts](src/types.ts)) and `packages/config`. Green build + typecheck. *No behaviour change.*
 
