@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import type { ServerEvents, ClientEvents, AppSocket } from './events';
+import type { AppSocket } from './events';
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected';
 
@@ -35,9 +35,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ url, children })
   const [status, setStatus] = useState<ConnectionStatus>('connecting');
 
   useEffect(() => {
-    const s = io<ServerEvents, ClientEvents>(url, {
+    const s = io(url, {
       transports: ['websocket', 'polling'],
-    });
+    }) as unknown as AppSocket;
     setSocket(s);
 
     const onConnect = () => setStatus('connected');
