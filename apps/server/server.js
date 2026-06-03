@@ -15,6 +15,7 @@ const pollsHandler = require('./handlers/polls');
 const { livekitToken } = require('./routes/livekit');
 const { createOrder, getOrder, payOrder } = require('./routes/orders');
 const { getDelivery } = require('./routes/deliveries');
+const { razorpayWebhook } = require('./routes/razorpay');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -33,7 +34,8 @@ const origins = (process.env.CORS_ORIGINS || '')
 const opts = origins.length > 0 ? { origin: origins } : {};
 
 app.use(cors(opts));
-app.use(express.json());
+// Keep the raw body so the Razorpay webhook can verify its HMAC signature.
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() });
@@ -46,6 +48,8 @@ app.get('/api/orders/:id', getOrder);
 app.post('/api/orders/:id/pay', payOrder);
 
 app.get('/api/deliveries/:orderId', getDelivery);
+
+app.post('/api/razorpay/webhook', razorpayWebhook);
 
 const formatStream = (s) => {
   const rawCount = store.getViewerCount(s._id);
