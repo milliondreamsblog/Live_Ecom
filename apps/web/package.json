@@ -1,14 +1,17 @@
 {
-  "name": "live-commerce-mvp",
+  "name": "@livedrop/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "echo \"(no lint configured)\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@livedrop/core": "workspace:*",
     "lucide-react": "^0.564.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -16,6 +19,7 @@
     "socket.io-client": "4.7.2"
   },
   "devDependencies": {
+    "@livedrop/config": "workspace:*",
     "@tailwindcss/vite": "^4.2.0",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
