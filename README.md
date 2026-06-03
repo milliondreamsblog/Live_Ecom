@@ -22,6 +22,7 @@ Built with:
 Turborepo + pnpm monorepo:
 
 - `apps/web/` -> React + Vite frontend (Socket.IO client + WebRTC)
+- `apps/mobile/` -> Expo (React Native) app (Expo Router), consumes the shared packages
 - `apps/server/` -> Node/Express + Socket.IO signaling server
 - `packages/core/` -> shared domain schemas + types (zod) + money helpers
 - `packages/realtime/` -> typed Socket.IO event contract + SocketProvider/useSocket
