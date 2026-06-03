@@ -23,6 +23,11 @@ build
 .turbo
 .claude
 
+# Expo / React Native
+.expo
+*.orig.*
+web-build
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
