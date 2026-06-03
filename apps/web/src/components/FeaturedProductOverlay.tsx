@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShoppingCart, X, Zap } from 'lucide-react';
-import { FeaturedProduct } from '../types';
+import { FeaturedProduct, formatINR } from '../types';
 import { useC } from '../contexts/CartContext';
 
 interface FeaturedProductOverlayProps {
@@ -72,7 +72,7 @@ export const FeaturedProductOverlay: React.FC<FeaturedProductOverlayProps> = ({ 
                         </div>
                         <div className="flex items-center justify-between mt-2">
                             <span className="text-lg font-extrabold text-gray-900">
-                                ₹{product.price.toLocaleString('en-IN')}
+                                {formatINR(product.price)}
                             </span>
                             <button
                                 onClick={handleAdd}
