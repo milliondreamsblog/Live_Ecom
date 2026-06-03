@@ -23,7 +23,10 @@ Turborepo + pnpm monorepo:
 
 - `apps/web/` -> React + Vite frontend (Socket.IO client + WebRTC)
 - `apps/server/` -> Node/Express + Socket.IO signaling server
-- `packages/core/` -> shared domain schemas + types (zod)
+- `packages/core/` -> shared domain schemas + types (zod) + money helpers
+- `packages/realtime/` -> typed Socket.IO event contract + SocketProvider/useSocket
+- `packages/features/` -> headless cross-platform hooks (useChat/usePolls/useCoupons)
+- `packages/ui/` -> design tokens (source of truth) + Tailwind v4 theme
 - `packages/config/` -> shared tsconfig presets
 - `apps/web/src/pages/Host.tsx` -> Host stream screen
 - `apps/web/src/pages/Watch.tsx` -> Viewer stream screen
