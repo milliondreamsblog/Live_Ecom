@@ -74,3 +74,8 @@ export const canTransition = (from: OrderStatus, to: OrderStatus): boolean =>
 
 /** Statuses reachable from the given one. */
 export const nextStatuses = (from: OrderStatus): OrderStatus[] => ORDER_TRANSITIONS[from];
+
+/** Sum of line items in integer paise. */
+export const orderTotalPaise = (
+  items: Array<{ unitPricePaise: number; quantity: number }>,
+): number => items.reduce((sum, i) => sum + i.unitPricePaise * i.quantity, 0);
