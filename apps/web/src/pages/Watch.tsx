@@ -5,6 +5,7 @@ import { useSocket } from '../contexts/SocketContext';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { usePolls } from '../hooks/usePolls';
 import { useCoupons } from '../hooks/useCoupons';
+import { useCheckout } from '../hooks/useCheckout';
 import { useC } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { VideoPlayer } from '../components/VideoPlayer';
@@ -31,6 +32,7 @@ export const Watch: React.FC = () => {
     const { open, tog, its, rem, tot, clr } = useC();
     const { coupon } = useCoupons(id || '');
     const { user } = useAuth();
+    const { checkout } = useCheckout({ apiBase: SOCKET_URL, roomId: id, username: user?.name });
 
     useEffect(() => {
         if (!id) return;
@@ -69,7 +71,17 @@ export const Watch: React.FC = () => {
     const disc = coupon ? tot * (coupon.discount / 100) : 0;
     const fTot = Math.max(0, tot - disc);
 
-    const pay = () => {
+    const pay = async () => {
+        // Create + pay a real order (mock-captured unless Razorpay is configured).
+        // Falls back to the demo flow if the orders API is unreachable.
+        const lines = its.map(item => ({
+            productId: item.id,
+            name: item.name,
+            priceRupees: item.price,
+            quantity: item.q,
+        }));
+        const orderId = lines.length ? await checkout(lines) : null;
+
         if (socket && id) {
             its.forEach(item => {
                 socket.emit('product-purchased', {
@@ -79,7 +91,9 @@ export const Watch: React.FC = () => {
                 });
             });
         }
-        alert('Demo payment successful! Dhanyavaad 🙏');
+        alert(orderId
+            ? `Order placed (${orderId})! Dhanyavaad 🙏`
+            : 'Demo payment successful! Dhanyavaad 🙏');
         clr();
         tog();
     };
