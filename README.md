@@ -19,44 +19,45 @@ Built with:
 
 ## Project Structure
 
-- `backend/` -> Node/Express + Socket.IO signaling server
-- `pages/Host.tsx` -> Host stream screen
-- `pages/Watch.tsx` -> Viewer stream screen
-- `services/rtcConfig.ts` -> ICE/STUN/TURN config from env vars
+Turborepo + pnpm monorepo:
+
+- `apps/web/` -> React + Vite frontend (Socket.IO client + WebRTC)
+- `apps/server/` -> Node/Express + Socket.IO signaling server
+- `packages/core/` -> shared domain schemas + types (zod)
+- `packages/config/` -> shared tsconfig presets
+- `apps/web/src/pages/Host.tsx` -> Host stream screen
+- `apps/web/src/pages/Watch.tsx` -> Viewer stream screen
+- `apps/web/src/services/rtcConfig.ts` -> ICE/STUN/TURN config from env vars
 - `render.yaml` -> Render Blueprint config
+- `plan.md` -> cross-platform / live-quick-commerce roadmap
 
 ## Run Locally (2 terminals)
 
 Prerequisites:
-- Node.js 18+ (Node 20 recommended)
-- npm
+- Node.js 20+
+- pnpm 10 (run `corepack enable` to get it)
 
-1. Install frontend dependencies:
+1. Install all workspace dependencies (from the repo root):
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. Install backend dependencies:
+2. Start the backend (Terminal 1):
    ```bash
-   cd backend
-   npm install
-   cd ..
-   ```
-
-3. Start backend (Terminal 1):
-   ```bash
-   cd backend
-   npm start
+   pnpm --filter @livedrop/server start
    ```
    Backend runs on `http://localhost:4000`
 
-4. Start frontend (Terminal 2):
+3. Start the frontend (Terminal 2):
    ```bash
-   npm run dev
+   pnpm --filter @livedrop/web dev
    ```
    Frontend runs on `http://localhost:3000`
 
-5. Test streaming locally:
+   Useful root scripts: `pnpm build`, `pnpm typecheck` (run across the
+   workspace via Turborepo).
+
+4. Test streaming locally:
    - Host page: `http://localhost:3000/#/host`
    - Viewer page: `http://localhost:3000/#/watch/1`
    - Open host and viewer in different tabs (or one incognito tab), then click `Go Live`.
@@ -65,7 +66,7 @@ Prerequisites:
 
 ### Frontend vars (`Vite`)
 
-You can set these in Render or in local `.env.local`.
+You can set these in Render or in local `apps/web/.env`.
 
 - `VITE_SOCKET_URL`
   - Local: `http://localhost:4000`
