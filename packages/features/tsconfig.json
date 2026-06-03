@@ -1,0 +1,7 @@
+{
+  "extends": "@livedrop/config/tsconfig/react-app.json",
+  "compilerOptions": {
+    "strict": true
+  },
+  "include": ["src"]
+}
