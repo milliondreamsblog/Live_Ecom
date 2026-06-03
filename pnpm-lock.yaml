@@ -88,6 +88,50 @@ importers:
         specifier: ~5.8.2
         version: 5.8.3
 
+  packages/features:
+    dependencies:
+      '@livedrop/core':
+        specifier: workspace:*
+        version: link:../core
+      '@livedrop/realtime':
+        specifier: workspace:*
+        version: link:../realtime
+    devDependencies:
+      '@livedrop/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.16
+      react:
+        specifier: ^19.2.4
+        version: 19.2.7
+      typescript:
+        specifier: ~5.8.2
+        version: 5.8.3
+
+  packages/realtime:
+    dependencies:
+      '@livedrop/core':
+        specifier: workspace:*
+        version: link:../core
+      socket.io-client:
+        specifier: 4.7.2
+        version: 4.7.2
+    devDependencies:
+      '@livedrop/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.16
+      react:
+        specifier: ^19.2.4
+        version: 19.2.7
+      typescript:
+        specifier: ~5.8.2
+        version: 5.8.3
+
 packages:
 
   '@babel/code-frame@7.29.7':
@@ -620,6 +664,9 @@ packages:
   '@types/node@22.19.19':
     resolution: {integrity: sha512-dyh/xO2Fh5bYrfWaaqGrRQQGkNdmYw6AmaAUvYeUMNTWQtvb796ikLdmTchRmOlOiIJ1TDXfWgVx1QkUlQ6Hew==}
 
+  '@types/react@19.2.16':
+    resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
+
   '@types/webidl-conversions@7.0.3':
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
 
@@ -704,6 +751,9 @@ packages:
   cors@2.8.6:
     resolution: {integrity: sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==}
     engines: {node: '>= 0.10'}
+
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -1777,6 +1827,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/react@19.2.16':
+    dependencies:
+      csstype: 3.2.3
+
   '@types/webidl-conversions@7.0.3': {}
 
   '@types/whatwg-url@13.0.0':
@@ -1869,6 +1923,8 @@ snapshots:
     dependencies:
       object-assign: 4.1.1
       vary: 1.1.2
+
+  csstype@3.2.3: {}
 
   debug@2.6.9:
     dependencies:
