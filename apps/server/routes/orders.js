@@ -101,9 +101,11 @@ const payOrder = async (req, res) => {
       });
     }
 
-    // Mock payment (no Razorpay configured): pending -> paid.
+    // Mock payment (no Razorpay configured): pending -> paid + assign delivery.
     order.status = 'paid';
     await order.save();
+    const { createDeliveryForOrder } = require('./deliveries');
+    await createDeliveryForOrder(order._id);
     res.json({ order: serialize(order), mock: true });
   } catch (err) {
     console.error('payOrder error:', err);
