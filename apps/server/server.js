@@ -13,6 +13,7 @@ const chatHandler = require('./handlers/chat');
 const commerceHandler = require('./handlers/commerce');
 const pollsHandler = require('./handlers/polls');
 const { livekitToken } = require('./routes/livekit');
+const { createOrder, getOrder, payOrder } = require('./routes/orders');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -38,6 +39,10 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/api/livekit/token', livekitToken);
+
+app.post('/api/orders', createOrder);
+app.get('/api/orders/:id', getOrder);
+app.post('/api/orders/:id/pay', payOrder);
 
 const formatStream = (s) => {
   const rawCount = store.getViewerCount(s._id);
