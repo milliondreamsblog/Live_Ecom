@@ -11,6 +11,9 @@ export default defineConfig(() => {
     },
     plugins: [tailwindcss(), react()],
     resolve: {
+      // Ensure a single React instance across linked workspace packages
+      // (@livedrop/realtime, @livedrop/features) to avoid "invalid hook call".
+      dedupe: ['react', 'react-dom'],
       alias: {
         '@': path.resolve(__dirname, '.'),
       }
