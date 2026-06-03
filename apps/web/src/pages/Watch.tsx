@@ -15,6 +15,7 @@ import { PollWidget } from '../components/PollWidget';
 import { CouponBanner } from '../components/CouponBanner';
 import { ShopPanel } from '../components/ShopPanel';
 import { FeaturedProductOverlay } from '../components/FeaturedProductOverlay';
+import { OrderTracker } from '../components/OrderTracker';
 import { St, FeaturedProduct, formatINR } from '../types';
 import { SOCKET_URL } from '../config';
 
@@ -32,7 +33,7 @@ export const Watch: React.FC = () => {
     const { open, tog, its, rem, tot, clr } = useC();
     const { coupon } = useCoupons(id || '');
     const { user } = useAuth();
-    const { checkout } = useCheckout({ apiBase: SOCKET_URL, roomId: id, username: user?.name });
+    const { checkout, orderId } = useCheckout({ apiBase: SOCKET_URL, roomId: id, username: user?.name });
 
     useEffect(() => {
         if (!id) return;
@@ -166,6 +167,9 @@ export const Watch: React.FC = () => {
                     product={featuredProduct}
                     onDismiss={() => setFeaturedProduct(null)}
                 />
+
+                {/* Live order tracking (after checkout) */}
+                <OrderTracker orderId={orderId} />
 
                 {/* Top HUD */}
                 <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent flex justify-between items-start z-30 pointer-events-none">
