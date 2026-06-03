@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Zap } from 'lucide-react';
-import { Product } from '../types';
+import { Product, formatINR } from '../types';
 import { useC } from '../contexts/CartContext';
 
 interface ProductCardProps {
@@ -25,7 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onFeature }) 
                     <p className="text-gray-500 text-xs">In Stock</p>
                 </div>
                 <div className="flex items-center justify-between mt-2 gap-1">
-                    <span className="font-bold text-gray-900">₹{product.price.toLocaleString('en-IN')}</span>
+                    <span className="font-bold text-gray-900">{formatINR(product.price)}</span>
                     <div className="flex gap-1">
                         {onFeature && (
                             <button
