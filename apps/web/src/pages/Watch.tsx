@@ -14,7 +14,7 @@ import { PollWidget } from '../components/PollWidget';
 import { CouponBanner } from '../components/CouponBanner';
 import { ShopPanel } from '../components/ShopPanel';
 import { FeaturedProductOverlay } from '../components/FeaturedProductOverlay';
-import { St, FeaturedProduct } from '../types';
+import { St, FeaturedProduct, formatINR } from '../types';
 import { SOCKET_URL } from '../config';
 
 export const Watch: React.FC = () => {
@@ -104,7 +104,7 @@ export const Watch: React.FC = () => {
                                         <img src={i.image} className="w-16 h-16 rounded-lg object-cover" alt={i.name} />
                                         <div className="flex-grow">
                                             <h3 className="font-semibold text-sm">{i.name}</h3>
-                                            <p className="text-gray-500 text-xs">₹{i.price.toLocaleString('en-IN')}</p>
+                                            <p className="text-gray-500 text-xs">{formatINR(i.price)}</p>
                                         </div>
                                         <span className="text-sm font-medium">x{i.q}</span>
                                         <button onClick={() => rem(i.id)} className="text-red-400 hover:text-red-600 transition-colors"><Trash2 size={16} /></button>
@@ -113,14 +113,14 @@ export const Watch: React.FC = () => {
                             )}
                         </div>
                         <div className="p-6 border-t bg-gray-50">
-                            <div className="flex justify-between text-gray-600 mb-2"><span>Subtotal</span><span>₹{tot.toLocaleString('en-IN')}</span></div>
+                            <div className="flex justify-between text-gray-600 mb-2"><span>Subtotal</span><span>{formatINR(tot)}</span></div>
                             {coupon && (
                                 <div className="flex justify-between text-green-600 mb-2">
                                     <span>Discount ({coupon.code} -{coupon.discount}%)</span>
-                                    <span>-₹{disc.toLocaleString('en-IN')}</span>
+                                    <span>-{formatINR(disc)}</span>
                                 </div>
                             )}
-                            <div className="flex justify-between font-bold text-lg"><span>Total</span><span>₹{fTot.toLocaleString('en-IN')}</span></div>
+                            <div className="flex justify-between font-bold text-lg"><span>Total</span><span>{formatINR(fTot)}</span></div>
                             <button onClick={pay} className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl mt-4 font-bold hover:shadow-lg transition-all">
                                 Pay Now 🚀
                             </button>
