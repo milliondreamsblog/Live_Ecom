@@ -12,6 +12,7 @@ const signalingHandler = require('./handlers/signaling');
 const chatHandler = require('./handlers/chat');
 const commerceHandler = require('./handlers/commerce');
 const pollsHandler = require('./handlers/polls');
+const { livekitToken } = require('./routes/livekit');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -35,6 +36,8 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() });
 });
+
+app.get('/api/livekit/token', livekitToken);
 
 const formatStream = (s) => {
   const rawCount = store.getViewerCount(s._id);
