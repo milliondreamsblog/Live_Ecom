@@ -24,9 +24,16 @@ export default function LiveFeed() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
-      <Text style={styles.title}>
-        Live <Text style={styles.brand}>now</Text>
-      </Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>
+          Live <Text style={styles.brand}>now</Text>
+        </Text>
+        <Link href="/host" asChild>
+          <Pressable style={styles.goLive}>
+            <Text style={styles.goLiveText}>🎙 Go Live</Text>
+          </Pressable>
+        </Link>
+      </View>
       <FlatList
         data={streams}
         keyExtractor={(s) => s.id}
@@ -54,8 +61,11 @@ export default function LiveFeed() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0A0A0B', paddingHorizontal: 16 },
-  title: { color: '#fff', fontSize: 32, fontWeight: '800', marginBottom: 16 },
+  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
+  title: { color: '#fff', fontSize: 32, fontWeight: '800' },
   brand: { color: '#E1306C' },
+  goLive: { backgroundColor: '#E1306C', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 8 },
+  goLiveText: { color: '#fff', fontWeight: '700', fontSize: 13 },
   list: { gap: 12, paddingBottom: 32 },
   card: { backgroundColor: '#161618', borderRadius: 16, padding: 16 },
   liveBadge: { alignSelf: 'flex-start', backgroundColor: '#EF4444', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 2, marginBottom: 8 },
