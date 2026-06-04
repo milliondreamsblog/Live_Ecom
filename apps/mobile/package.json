@@ -8,7 +8,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "lint": "echo \"(no lint configured)\"",
-    "typecheck": "echo \"(mobile typecheck runs after 'pnpm install' provisions the Expo toolchain)\""
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@livedrop/core": "workspace:*",
@@ -24,7 +24,7 @@
     "react-native-screens": "~4.4.0"
   },
   "devDependencies": {
-    "@types/react": "~18.3.12",
+    "@types/react": "^19.2.0",
     "typescript": "~5.8.2"
   }
 }
