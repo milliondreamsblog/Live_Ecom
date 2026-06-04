@@ -22,7 +22,10 @@ Built with:
 Turborepo + pnpm monorepo:
 
 - `apps/web/` -> React + Vite frontend (Socket.IO client + WebRTC)
-- `apps/mobile/` -> Expo (React Native) app (Expo Router), consumes the shared packages
+- `apps/mobile/` -> Expo (React Native) app (Expo Router) — live feed, watch
+  (chat/polls/coupons/cart/checkout/tracker) + host Go Live; shares all logic
+  with web. Run with `pnpm --filter @livedrop/mobile start` (Expo).
+  Live video + host camera are placeholders pending native deps.
 - `apps/server/` -> Node/Express + Socket.IO signaling server
 - `packages/core/` -> shared domain schemas + types (zod) + money helpers
 - `packages/realtime/` -> typed Socket.IO event contract + SocketProvider/useSocket
